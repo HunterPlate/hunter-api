@@ -4,6 +4,6 @@ namespace hunter_api.Interfaces
 {
     public interface IRegisterPlatesService
     {
-        Task RegisterPlates(PlatesDataRequest plates);
+        Task RegisterPlates(List<PlatesDataRequest> plates);
     }
 }

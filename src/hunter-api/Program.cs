@@ -1,3 +1,8 @@
+using hunter_domain.Domain;
+using hunter_domain.Interfaces;
+using hunter_repository.Interface;
+using hunter_repository.Repositories;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -11,6 +16,8 @@ builder.Services.AddSwaggerGen();
 #region Services
 
 builder.Services.AddScoped<IApplicationBuilder, ApplicationBuilder>();
+builder.Services.AddScoped<IRegisterPlatesDomain, RegisterPlatesDomain>();
+builder.Services.AddScoped<IRegisterPlatesRepositorie, RegisterPlatesRepositorie>();
 
 #endregion
 

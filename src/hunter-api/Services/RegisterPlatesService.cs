@@ -11,7 +11,7 @@ namespace hunter_api.Services
             
         }
 
-        public Task RegisterPlates(PlatesDataRequest plates)
+        public Task RegisterPlates(List<PlatesDataRequest> plates)
         {
             throw new NotImplementedException();
         }

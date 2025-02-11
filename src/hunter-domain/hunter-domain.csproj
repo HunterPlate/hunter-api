@@ -8,9 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Domain\" />
-    <Folder Include="Interfaces\" />
-    <Folder Include="Enums\" />
+    <ProjectReference Include="..\hunter-repository\hunter-repository.csproj" />
   </ItemGroup>
-
 </Project>

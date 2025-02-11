@@ -18,7 +18,7 @@ namespace hunter_api.Controllers
 
         [HttpPost("register-plate")]
         public async Task<IActionResult> CreatePlate(
-            [FromBody] PlatesDataRequest plates)
+            [FromBody] List<PlatesDataRequest> plates)
         {
             var result = _registerPlatesService.RegisterPlates(plates);
 
