@@ -1,6 +1,6 @@
 ﻿namespace hunter_repository.Models
 {
-    public class InsertedPlatesResults
+    public class InsertedPlatesResultsModel
     {
         public string CarPlate {  get; set; }
         public string Status { get; set; }

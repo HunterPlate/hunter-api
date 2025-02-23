@@ -2,7 +2,7 @@
 
 namespace hunter_repository.Models
 {
-    public class RegisterPlatesRepositorieModel
+    public class RegisterPlatesModel
     {
         public string Company { get; set; }
         public string CustomerName { get; set; }

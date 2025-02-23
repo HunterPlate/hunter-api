@@ -16,7 +16,7 @@ namespace hunter_domain.Models
         public int YearManufactore { get; set; }
         public int YearModel { get; set; }
         public string Folder { get; set; }
-        public string ProcessNumer { get; set; }
+        public string ProcessNumber { get; set; }
         public EStatusDomain Status { get; set; }
     }
 }

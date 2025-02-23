@@ -15,9 +15,21 @@ namespace hunter_domain.Domain
             _registerPlatesRepositorie = registerPlatesRepositorie;
         }
 
+        public async Task<CollectedPlatesModel> GetPlatesDomain(string plate)
+        {
+            var response = await _registerPlatesRepositorie.GetPlates(plate);
+
+            return new CollectedPlatesModel() 
+            { 
+                CarPlate = response.CarPlate,
+                AutoModel = response.AutoModel,
+                AutoBrand = response.AutoBrand 
+            };
+        }
+
         public async Task<List<InsertedPlatesResultDomain>> InsertPlatesDomain(List<PlatesDataDomain> plates)
         {
-            var response = await _registerPlatesRepositorie.InsertPlatesRepositorie(plates.Select(x => new RegisterPlatesRepositorieModel()
+            var response = await _registerPlatesRepositorie.InsertPlates(plates.Select(x => new RegisterPlatesModel()
             {
                 Company = x.Company,
                 CustomerName = x.CustomerName,
@@ -31,7 +43,7 @@ namespace hunter_domain.Domain
                 YearManufactore = x.YearManufactore,
                 YearModel = x.YearModel,
                 Folder = x.Folder,
-                ProcessNumer = x.ProcessNumer,
+                ProcessNumer = x.ProcessNumber,
                 Status = (EStatusRepositorie)x.Status
             }).ToList());
 

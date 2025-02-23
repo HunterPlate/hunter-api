@@ -16,7 +16,7 @@ namespace hunter_api.Models.Request
         public int YearManufactore { get; set; }
         public int YearModel { get; set; }
         public string Folder { get; set; }
-        public string ProcessNumer { get; set; }
+        public string ProcessNumber { get; set; }
         public EStatus Status { get; set; }
     }
 }

@@ -5,22 +5,31 @@ using Microsoft.AspNetCore.Mvc;
 namespace hunter_api.Controllers
 {
     [ApiController]
-    [Route("register")]
-    public class RegisterController : Controller
+    [Route("plates")]
+    public class PlatesController : Controller
     {
 
         private readonly IRegisterPlatesService _registerPlatesService;
 
-        public RegisterController(IRegisterPlatesService registerPlatesService)
+        public PlatesController(IRegisterPlatesService registerPlatesService)
         {
             _registerPlatesService = registerPlatesService;
         }
 
-        [HttpPost("register-plate")]
+        [HttpPost("register")]
         public async Task<IActionResult> CreatePlate(
             [FromBody] List<PlatesDataRequest> plates)
         {
             var result = _registerPlatesService.RegisterPlates(plates);
+
+            return Ok(result);
+        }
+
+        [HttpPost("get-plate")]
+        public async Task<IActionResult> GetPlate(
+            [FromQuery] string plates)
+        {
+            var result = _registerPlatesService.GetPlate(plates);
 
             return Ok(result);
         }
