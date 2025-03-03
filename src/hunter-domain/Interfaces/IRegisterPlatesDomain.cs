@@ -6,6 +6,7 @@ namespace hunter_domain.Interfaces
     public interface IRegisterPlatesDomain
     {
         Task<bool> InsertPlatesDomain(List<PlatesDataModelDomain> plates); 
-        Task<CollectedPlatesModelDomain?> GetPlatesDomain(string plate); 
+        Task<List<CollectedPlatesModelDomain>> GetPlatesDomain(); 
+        Task DeletePlatesDomain(List<DeletePlatesDataModelDomain> plates);
     }
 }

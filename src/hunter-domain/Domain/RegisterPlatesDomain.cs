@@ -17,11 +17,23 @@ namespace hunter_domain.Domain
             _mapper = mapper;
         }
 
-        public async Task<CollectedPlatesModelDomain?> GetPlatesDomain(string plate)
+        public async Task DeletePlatesDomain(List<DeletePlatesDataModelDomain> plates)
         {
-            var response = await _registerPlatesRepositorie.GetPlates(plate);
+            await _registerPlatesRepositorie.DeletePlates(plates.Select(x => _mapper.Map<DeletePlatesModelRepository>(x)).ToList());
+        }
 
-            return _mapper.Map<CollectedPlatesModelDomain?>(response);
+        public async Task<List<CollectedPlatesModelDomain>> GetPlatesDomain()
+        {
+            var response = await _registerPlatesRepositorie.GetPlates();
+
+            var autoPlatesList = new List<CollectedPlatesModelDomain>();
+
+            foreach (var item in response)
+            {
+                autoPlatesList.Add(_mapper.Map<CollectedPlatesModelDomain>(item));
+            }
+
+            return autoPlatesList;
         }
 
         public async Task<bool> InsertPlatesDomain(List<PlatesDataModelDomain> plates)

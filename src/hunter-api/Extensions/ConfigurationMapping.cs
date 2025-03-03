@@ -12,6 +12,8 @@ namespace hunter_api.Extensions
             CreateMap<CollectedPlatesModelDomain, CollectedPlatesModelRepository>().ReverseMap();
             CreateMap<PlatesDataModelRequest, PlatesDataModelDomain>().ReverseMap();
             CreateMap<PlatesDataModelDomain, RegisterPlatesModelRepository>().ReverseMap();
+            CreateMap<DeletePlatesDataModelDomain, DeletePlatesDataModelRequest>().ReverseMap();
+            CreateMap<DeletePlatesDataModelDomain, DeletePlatesModelRepository>().ReverseMap();
         }
     }
 }

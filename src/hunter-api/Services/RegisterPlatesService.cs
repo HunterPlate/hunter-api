@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
-using hunter_api.Enums;
 using hunter_api.Extensions;
 using hunter_api.Interfaces;
 using hunter_api.Models.Request;
 using hunter_domain.Interfaces;
 using hunter_domain.Models;
-using hunter_repository.Models;
 
 namespace hunter_api.Services
 {
@@ -27,9 +25,9 @@ namespace hunter_api.Services
             return true;
         }
 
-        public async Task<CollectedPlatesModelDomain> GetPlate(string plate)
+        public async Task<List<CollectedPlatesModelDomain>> GetPlate()
         {
-            var result = await _registerPlatesDomain.GetPlatesDomain(plate);
+            var result = await _registerPlatesDomain.GetPlatesDomain();
 
             return result;
         }
@@ -49,6 +47,11 @@ namespace hunter_api.Services
 
             var result = await _registerPlatesDomain.InsertPlatesDomain(data.Select(_ => _mapper.Map<PlatesDataModelDomain>(_)).ToList());
             return result;
+        }
+
+        public async Task DeletePlates(List<DeletePlatesDataModelRequest> plates)
+        {
+            await _registerPlatesDomain.DeletePlatesDomain(plates.Select(_=> _mapper.Map<DeletePlatesDataModelDomain>(_)).ToList());
         }
     }
 }

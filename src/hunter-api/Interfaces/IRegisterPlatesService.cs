@@ -7,7 +7,8 @@ namespace hunter_api.Interfaces
     public interface IRegisterPlatesService
     {
         Task<bool> RegisterPlates(List<PlatesDataModelRequest> plates);
-        Task<CollectedPlatesModelDomain> GetPlate(string plate);
+        Task<List<CollectedPlatesModelDomain>> GetPlate();
+        Task DeletePlates(List<DeletePlatesDataModelRequest> plates);
         Task<bool> InsertTablePlates(IFormFile file);
     }
 }

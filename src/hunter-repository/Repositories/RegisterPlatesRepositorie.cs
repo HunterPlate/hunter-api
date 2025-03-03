@@ -4,6 +4,7 @@ using hunter_repository.Interface;
 using hunter_repository.Models;
 using Microsoft.Extensions.Configuration;
 using MySql.Data.MySqlClient;
+using MySqlX.XDevAPI.Common;
 
 namespace hunter_repository.Repositories
 {
@@ -49,23 +50,46 @@ namespace hunter_repository.Repositories
             }
         }
 
-        public async Task<CollectedPlatesModelRepository?> GetPlates(string plate)
+        public async Task<List<CollectedPlatesModelRepository>> GetPlates()
         {
             var response = new CollectedPlatesModelRepository();
 
             using (var connection = new MySqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
-                var param = new
-                {
-                    plate = plate
-                };
 
                 string query = GetQuerys.Get.GetPlates;
 
-                var res = await connection.QueryAsync<CollectedPlatesModelRepository?>(query, param);
+                var res = await connection.QueryAsync<CollectedPlatesModelRepository>(query);
 
-                return res.FirstOrDefault();
+                return res.ToList();
+            }
+        }
+
+        public async Task DeletePlates(List<DeletePlatesModelRepository> plates)
+        {
+            using (var connection = new MySqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                using (var transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        string query = GetQuerys.Delete.DeletePlates;
+
+                        foreach (var plate in plates)
+                        {
+                            var response = await connection.QueryAsync(query, plate, transaction: transaction);
+                        }
+
+                        transaction.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        throw new Exception(ex.Message);
+                    }
+                }
             }
         }
     }

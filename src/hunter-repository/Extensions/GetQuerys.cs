@@ -9,7 +9,11 @@
 
         public static class Get
         {
-            public static readonly string GetPlates = "SELECT * FROM InsertedAutoPlates IAP WHERE IAP.AutoPlate = @plate";
+            public static readonly string GetPlates = "SELECT * FROM InsertedAutoPlates IAP";
+        }
+        public static class Delete
+        {
+            public static readonly string DeletePlates = "DELETE FROM AutoPlates WHERE AutoPlate = @AutoPlate;";
         }
 
     }

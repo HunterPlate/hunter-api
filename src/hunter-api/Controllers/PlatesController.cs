@@ -29,13 +29,20 @@ namespace hunter_api.Controllers
             return Ok("Placas Cadastradas");
         }
 
-        [HttpGet("get-plate")]
-        public async Task<IActionResult> GetPlate(
-            [FromQuery] string plates)
+        [HttpGet("get-plates")]
+        public async Task<IActionResult> GetPlate()
         {
-            var result = await _registerPlatesService.GetPlate(plates);
+            var result = await _registerPlatesService.GetPlate();
 
             return Ok(result);
+        }
+
+        [HttpDelete("delete-plates")]
+        public async Task<IActionResult> DeletePlates([FromBody] List<DeletePlatesDataModelRequest> plates)
+        {
+            await _registerPlatesService.DeletePlates(plates);
+
+            return Ok("Placas deletadas");
         }
 
         [HttpPost("upload-sheet")]
