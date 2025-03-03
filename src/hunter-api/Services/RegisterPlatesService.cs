@@ -1,8 +1,11 @@
-﻿using hunter_api.Enums;
+﻿using AutoMapper;
+using hunter_api.Enums;
+using hunter_api.Extensions;
 using hunter_api.Interfaces;
 using hunter_api.Models.Request;
 using hunter_domain.Interfaces;
 using hunter_domain.Models;
+using hunter_repository.Models;
 
 namespace hunter_api.Services
 {
@@ -10,36 +13,42 @@ namespace hunter_api.Services
     public class RegisterPlatesService : IRegisterPlatesService
     {
         private readonly IRegisterPlatesDomain _registerPlatesDomain;
-        public RegisterPlatesService(IRegisterPlatesDomain registerPlatesDomain)
+        private readonly IMapper _mapper;
+        public RegisterPlatesService(IRegisterPlatesDomain registerPlatesDomain, IMapper mapper)
         {
             _registerPlatesDomain = registerPlatesDomain;
+            _mapper = mapper;
         }
 
-        public async Task RegisterPlates(List<PlatesDataRequest> plates)
+        public async Task<bool> RegisterPlates(List<PlatesDataModelRequest> plates)
         {
-            var result = await _registerPlatesDomain.InsertPlatesDomain(plates.Select(_ => new PlatesDataDomain()
-            {
-                Company = _.Company,
-                CustomerName = _.CustomerName,
-                UF = (EFederatedStatesDomain)_.UF,
-                City = _.City,
-                CarPlate = _.CarPlate,
-                Chassis = _.Chassis,
-                Renavan = _.Renavan,
-                AutoBrand = _.AutoBrand,
-                AutoModel = _.AutoModel,
-                YearManufactore = _.YearManufactore,
-                YearModel = _.YearModel,
-                Folder = _.Folder,
-                ProcessNumber = _.ProcessNumber,
-                Status = (EStatusDomain)_.Status,
+            var result = await _registerPlatesDomain.InsertPlatesDomain(plates.Select(_ => _mapper.Map<PlatesDataModelDomain>(_)).ToList());
 
-            }).ToList());
+            return true;
         }
 
-        public async Task GetPlate(string plate)
+        public async Task<CollectedPlatesModelDomain> GetPlate(string plate)
         {
             var result = await _registerPlatesDomain.GetPlatesDomain(plate);
+
+            return result;
+        }
+
+        public async Task<bool> InsertTablePlates(IFormFile file)
+        {
+
+            var data = new List<PlatesDataModelRequest>();
+
+            using (var stream = new MemoryStream())
+            {
+                file.CopyTo(stream);
+                stream.Position = 0;
+
+                data = CsvService.ProcessCsv(stream);
+            }
+
+            var result = await _registerPlatesDomain.InsertPlatesDomain(data.Select(_ => _mapper.Map<PlatesDataModelDomain>(_)).ToList());
+            return result;
         }
     }
 }

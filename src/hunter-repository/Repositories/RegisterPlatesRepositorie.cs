@@ -1,10 +1,9 @@
-﻿using Azure;
-using Dapper;
+﻿using Dapper;
 using hunter_repository.Extensions;
 using hunter_repository.Interface;
 using hunter_repository.Models;
-using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
+using MySql.Data.MySqlClient;
 
 namespace hunter_repository.Repositories
 {
@@ -14,13 +13,14 @@ namespace hunter_repository.Repositories
 
         public RegisterPlatesRepositorie(IConfiguration configuration)
         {
-            _connectionString = configuration.GetConnectionString("DefaultConnection");
+            _connectionString = configuration.GetConnectionString("DefaultConnection") ?? string.Empty;
         }
 
-        public async Task<List<InsertedPlatesResultsModel>> InsertPlates(List<Models.RegisterPlatesModel> plates)
+        public async Task<bool> InsertPlates(List<RegisterPlatesModelRepository> plates)
         {
-            var results = new List<InsertedPlatesResultsModel>();
-            using (var connection = new SqlConnection(_connectionString))
+            var result = true;
+
+            using (var connection = new MySqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
                 using (var transaction = connection.BeginTransaction())
@@ -29,51 +29,43 @@ namespace hunter_repository.Repositories
                     {
                         string query = GetQuerys.Insert.InsertPlates;
 
-                        var response = await connection.QueryAsync<InsertedPlatesResultsModel>(query, plates);
-
-                        results = response.ToList();
+                        foreach (var plate in plates)
+                        {
+                            var response = await connection.QueryAsync(query, plate, transaction: transaction);
+                        }
 
                         transaction.Commit();
                     }
                     catch (Exception ex)
                     {
                         transaction.Rollback();
+                        return false;
                         throw new Exception(ex.Message);
                     }
                     
                 }
 
-                return results;
+                return result;
             }
         }
 
-        public async Task<CollectedPlatesModel> GetPlates(string plate)
+        public async Task<CollectedPlatesModelRepository?> GetPlates(string plate)
         {
-            var response = new CollectedPlatesModel();
+            var response = new CollectedPlatesModelRepository();
 
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = new MySqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
-                using (var transaction = connection.BeginTransaction())
+                var param = new
                 {
-                    try
-                    {
-                        string query = GetQuerys.Get.GetPlates;
+                    plate = plate
+                };
 
-                        var res = await connection.QueryAsync<CollectedPlatesModel>(query, plate);
+                string query = GetQuerys.Get.GetPlates;
 
-                        response = res.FirstOrDefault();
+                var res = await connection.QueryAsync<CollectedPlatesModelRepository?>(query, param);
 
-                        transaction.Commit();
-                    }
-                    catch (Exception ex)
-                    {
-                        transaction.Rollback();
-                        throw new Exception(ex.Message);
-                    }
-                }
-
-                return response;
+                return res.FirstOrDefault();
             }
         }
     }

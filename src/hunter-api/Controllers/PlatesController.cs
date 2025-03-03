@@ -18,20 +18,46 @@ namespace hunter_api.Controllers
 
         [HttpPost("register")]
         public async Task<IActionResult> CreatePlate(
-            [FromBody] List<PlatesDataRequest> plates)
+            [FromBody] List<PlatesDataModelRequest> plates)
         {
-            var result = _registerPlatesService.RegisterPlates(plates);
+            var result = await _registerPlatesService.RegisterPlates(plates);
+            if (!result)
+            {
+                return BadRequest("Error: Placas não cadastradas");
+            }
+
+            return Ok("Placas Cadastradas");
+        }
+
+        [HttpGet("get-plate")]
+        public async Task<IActionResult> GetPlate(
+            [FromQuery] string plates)
+        {
+            var result = await _registerPlatesService.GetPlate(plates);
 
             return Ok(result);
         }
 
-        [HttpPost("get-plate")]
-        public async Task<IActionResult> GetPlate(
-            [FromQuery] string plates)
+        [HttpPost("upload-sheet")]
+        public async Task<IActionResult> UploadExcel(IFormFile file)
         {
-            var result = _registerPlatesService.GetPlate(plates);
+            if (file == null || file.Length == 0)
+                return BadRequest("Nenhum inválido.");
 
-            return Ok(result);
+            try
+            {
+                var result = await _registerPlatesService.InsertTablePlates(file);
+                if (!result)
+                {
+                    return BadRequest("Error: Placas não cadastradas");
+                }
+
+                return Ok("Placas Cadastradas");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Erro ao processar o arquivo: {ex.Message}");
+            }
         }
     }
 }

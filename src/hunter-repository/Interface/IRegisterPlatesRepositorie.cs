@@ -4,7 +4,7 @@ namespace hunter_repository.Interface
 {
     public interface IRegisterPlatesRepositorie
     {
-        Task<List<InsertedPlatesResultsModel>> InsertPlates(List<RegisterPlatesModel> plates);
-        Task<CollectedPlatesModel> GetPlates(string plate);
+        Task<bool> InsertPlates(List<RegisterPlatesModelRepository> plates);
+        Task<CollectedPlatesModelRepository?> GetPlates(string plate);
     }
 }

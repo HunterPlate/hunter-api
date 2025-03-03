@@ -2,7 +2,7 @@
 {
     public class InsertedPlatesResultsModel
     {
-        public string CarPlate {  get; set; }
+        public string AutoPlate {  get; set; }
         public string Status { get; set; }
     }
 }

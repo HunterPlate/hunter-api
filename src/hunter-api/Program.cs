@@ -1,3 +1,6 @@
+using hunter_api.Extensions;
+using hunter_api.Interfaces;
+using hunter_api.Services;
 using hunter_domain.Domain;
 using hunter_domain.Interfaces;
 using hunter_repository.Interface;
@@ -17,7 +20,9 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IApplicationBuilder, ApplicationBuilder>();
 builder.Services.AddScoped<IRegisterPlatesDomain, RegisterPlatesDomain>();
+builder.Services.AddScoped<IRegisterPlatesService, RegisterPlatesService>();
 builder.Services.AddScoped<IRegisterPlatesRepositorie, RegisterPlatesRepositorie>();
+builder.Services.AddAutoMapper(typeof(ConfigurationMapping));
 
 #endregion
 
